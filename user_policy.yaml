@@ -1,0 +1,48 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "User and policy"
+# No required:
+Metadata: {} 
+Conditions: {}
+Outputs: {} 
+
+Parameters: # Optional specifies values that you can refer them in the resources and outputs sections
+  CreateUsername:
+    Description: Name of the user
+    Type: String
+  CreatePassword:
+    Description: Password of the user
+    Type: String
+
+Resources:
+  CFUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Ref 'CreateUsername'
+      LoginProfile:
+        Password: !Ref 'CreatePassword'
+  CFUserPolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: CFUserPolicy
+      PolicyDocument:
+        Statement:
+        - Effect: Allow
+          Action: ['ec2:*']
+          Resource: '*'
+        - Effect: Deny
+          Action: ['cloudtrail:*']
+          Resource: '*'
+      Users: [!Ref 'CFUser']
+  UserKeys:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref 'CFUser'
+
+Outputs:
+  AccessKey:
+    Value: !Ref UserKeys
+    Description: AccessKey of the user
+  SecretKey:
+    Value: !GetAtt [UserKeys, SecretAccessKey]
+    Description: SecretKey of the user
