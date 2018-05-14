@@ -3,7 +3,7 @@
 
 ### How to use
 ```py
-./iam_user_policy.bash PROFILE USER PASSWORD 
+./iam_user_policy.sh PROFILE USER PASSWORD 
 ```
 
 `PROFILE` is your AWS profile with permission to create IAM users, groups and policies   
